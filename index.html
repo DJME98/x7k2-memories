@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Us 💕</title>
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --pink:#ff6fa5; --rose:#ffd1e0; --cream:#fff7f9; --deep:#b8336a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'Quicksand',sans-serif; color:#5a2a3c; min-height:100vh; overflow-x:hidden;
+    background:radial-gradient(circle at 20% 10%,#ffe3ee 0%,transparent 50%),
+               radial-gradient(circle at 80% 90%,#ffe9d6 0%,transparent 50%), var(--cream);
+  }
+
+  /* ---------- floating sparkles / hearts / flowers ---------- */
+  #floaters { position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden; }
+  .floater { position:absolute; bottom:-60px; animation:rise linear infinite; opacity:.85; }
+  @keyframes rise {
+    0%   { transform:translateY(0) rotate(0deg); opacity:0; }
+    10%  { opacity:.9; }
+    100% { transform:translateY(-115vh) rotate(360deg); opacity:0; }
+  }
+
+  /* ---------- lock screen ---------- */
+  #lock {
+    position:fixed; inset:0; z-index:10; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; padding:24px; text-align:center;
+    background:linear-gradient(160deg,#ffd6e5 0%,#fff0f5 50%,#ffe4d1 100%);
+    transition:opacity .9s ease, transform .9s ease;
+  }
+  #lock.hide { opacity:0; transform:scale(1.08); pointer-events:none; }
+  #lock h1 { font-family:'Great Vibes',cursive; font-size:3.2rem; color:var(--deep); font-weight:400; }
+  #lock p  { margin:6px 0 26px; font-size:1.05rem; }
+  .picker {
+    position:relative; display:flex; gap:6px; background:#fff; border-radius:22px;
+    padding:10px 14px; box-shadow:0 12px 40px rgba(184,51,106,.18);
+  }
+  .picker::before {               /* highlight band */
+    content:""; position:absolute; left:10px; right:10px; top:50%; height:44px;
+    transform:translateY(-50%); border-radius:12px; background:var(--rose); z-index:0;
+  }
+  .picker::after {                /* fade top & bottom */
+    content:""; position:absolute; inset:0; border-radius:22px; pointer-events:none; z-index:2;
+    background:linear-gradient(#fff 0%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 68%,#fff 100%);
+  }
+  .wheel {
+    position:relative; z-index:1; height:176px; overflow-y:scroll; scroll-snap-type:y mandatory;
+    scrollbar-width:none; -webkit-overflow-scrolling:touch; padding:66px 0;
+  }
+  .wheel::-webkit-scrollbar { display:none; }
+  .wheel div {
+    height:44px; line-height:44px; scroll-snap-align:center; font-size:1.2rem;
+    padding:0 10px; color:#c48a9f; transition:color .15s, font-weight .15s; cursor:pointer;
+  }
+  .wheel div.sel { color:var(--deep); font-weight:600; }
+  #month { width:130px; } #day { width:60px; } #year { width:80px; }
+  #unlock {
+    margin-top:28px; border:none; border-radius:999px; padding:14px 42px; font-size:1.1rem;
+    font-family:inherit; font-weight:600; color:#fff; cursor:pointer;
+    background:linear-gradient(135deg,var(--pink),var(--deep));
+    box-shadow:0 8px 24px rgba(184,51,106,.35); transition:transform .15s;
+  }
+  #unlock:active { transform:scale(.96); }
+  #msg { height:24px; margin-top:14px; color:var(--deep); font-weight:600; }
+  .shake { animation:shake .45s; }
+  @keyframes shake { 20%,60%{transform:translateX(-10px)} 40%,80%{transform:translateX(10px)} }
+
+  /* ---------- collage ---------- */
+  #main { position:relative; z-index:2; padding:40px 18px 80px; display:none; }
+  header { text-align:center; margin-bottom:34px; }
+  header h1 { font-family:'Great Vibes',cursive; font-size:clamp(3rem,9vw,5.5rem); color:var(--deep); font-weight:400; }
+  header p { font-size:1.15rem; letter-spacing:.5px; }
+  .collage { columns:4 230px; column-gap:18px; max-width:1200px; margin:0 auto; }
+  .polaroid {
+    break-inside:avoid; background:#fff; padding:10px 10px 14px; margin-bottom:22px;
+    border-radius:6px; box-shadow:0 8px 24px rgba(90,42,60,.15); position:relative;
+    transition:transform .3s ease, box-shadow .3s ease; cursor:pointer;
+  }
+  .polaroid:hover { transform:rotate(0deg) scale(1.04) !important; box-shadow:0 14px 34px rgba(90,42,60,.25); z-index:3; }
+  .polaroid img { width:100%; display:block; border-radius:3px; }
+  .polaroid .ph {
+    aspect-ratio:4/5; border-radius:3px; display:flex; align-items:center; justify-content:center;
+    font-size:3.4rem; background:linear-gradient(135deg,#ffd6e5,#ffe9d6);
+  }
+  .polaroid .badge { position:absolute; top:-14px; right:-10px; font-size:1.8rem; }
+  .polaroid .cap { text-align:center; font-family:'Great Vibes',cursive; font-size:1.5rem; margin-top:8px; color:var(--deep); }
+  footer { text-align:center; margin-top:30px; font-size:1.6rem; }
+
+  /* ---------- lightbox ---------- */
+  #lightbox {
+    position:fixed; inset:0; z-index:20; background:rgba(60,20,35,.85); display:none;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  #lightbox img { max-width:100%; max-height:90vh; border:10px solid #fff; border-radius:6px; }
+</style>
+</head>
+<body>
+
+<div id="floaters"></div>
+
+<!-- ===================== LOCK SCREEN ===================== -->
+<div id="lock">
+  <h1>For Us</h1>
+  <p>Pick our special date to come in 💕</p>
+  <div class="picker" id="picker">
+    <div class="wheel" id="month"></div>
+    <div class="wheel" id="day"></div>
+    <div class="wheel" id="year"></div>
+  </div>
+  <button id="unlock">Open ✨</button>
+  <div id="msg"></div>
+</div>
+
+<!-- ===================== COLLAGE ===================== -->
+<div id="main">
+  <header>
+    <h1>You &amp; Me</h1>
+    <p>🌸 every moment with you 🌸</p>
+  </header>
+  <div class="collage" id="collage"></div>
+  <footer>💖 ✨ 🌷 ✨ 💖</footer>
+</div>
+
+<div id="lightbox"><img alt=""></div>
+
+<script>
+const MONTHS = ["January","February","March","April","May","June","July",
+                "August","September","October","November","December"];
+const YEARS = []; for (let y = 2000; y <= 2035; y++) YEARS.push(y);
+const DAYS = []; for (let d = 1; d <= 31; d++) DAYS.push(d);
+const ITEM = 44;
+
+/* ---------- date wheels ---------- */
+function buildWheel(el, items, startIndex) {
+  el.innerHTML = items.map(v => `<div>${v}</div>`).join("");
+  const kids = [...el.children];
+  const mark = () => {
+    const i = Math.max(0, Math.min(items.length - 1, Math.round(el.scrollTop / ITEM)));
+    kids.forEach((k, j) => k.classList.toggle("sel", j === i));
+    el.dataset.index = i;
+  };
+  el.addEventListener("scroll", () => requestAnimationFrame(mark));
+  kids.forEach((k, j) => k.addEventListener("click", () =>
+    el.scrollTo({ top: j * ITEM, behavior: "smooth" })));
+  // desktop: mouse wheel moves one item at a time
+  el.addEventListener("wheel", e => {
+    e.preventDefault();
+    const i = +el.dataset.index + (e.deltaY > 0 ? 1 : -1);
+    el.scrollTo({ top: i * ITEM, behavior: "smooth" });
+  }, { passive: false });
+  el.scrollTop = startIndex * ITEM;
+  mark();
+}
+buildWheel(document.getElementById("month"), MONTHS, 0);
+buildWheel(document.getElementById("day"), DAYS, 0);
+buildWheel(document.getElementById("year"), YEARS, YEARS.indexOf(2025));
+
+/* ---------- decryption: the chosen date is the key ---------- */
+const SALT = Uint8Array.from(atob("axASi2lNyvl/7gjVpnVRnA=="), ch => ch.charCodeAt(0));
+async function deriveKey(pass) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", salt: SALT, iterations: 600000, hash: "SHA-256" },
+    base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+}
+async function fetchDecrypt(url, key) {
+  const buf = new Uint8Array(await (await fetch(url)).arrayBuffer());
+  return crypto.subtle.decrypt({ name: "AES-GCM", iv: buf.slice(0, 12) }, key, buf.slice(12));
+}
+
+let busy = false;
+async function tryUnlock() {
+  if (busy) return; busy = true;
+  const m = +document.getElementById("month").dataset.index + 1;
+  const d = DAYS[+document.getElementById("day").dataset.index];
+  const y = YEARS[+document.getElementById("year").dataset.index];
+  const pass = `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+  const msg = document.getElementById("msg");
+  msg.textContent = "Checking… 💭";
+  try {
+    const key = await deriveKey(pass);
+    const list = JSON.parse(new TextDecoder().decode(await fetchDecrypt("data.bin", key)));
+    msg.textContent = "💖 Welcome, my love 💖";
+    try { sessionStorage.setItem("pass", pass); } catch (e) {}
+    setTimeout(() => openSite(list, key), 400);
+  } catch (e) {
+    msg.textContent = "Not quite… try again 💭";
+    const p = document.getElementById("picker");
+    p.classList.remove("shake"); void p.offsetWidth; p.classList.add("shake");
+  }
+  busy = false;
+}
+document.getElementById("unlock").addEventListener("click", tryUnlock);
+
+/* ---------- collage ---------- */
+const BADGES = ["💕","✨","🌸","💖","🌷","💗","🌹","💞","🌼","💫"];
+function openSite(list, key) {
+  document.getElementById("lock").classList.add("hide");
+  document.getElementById("main").style.display = "block";
+  const box = document.getElementById("collage");
+  box.innerHTML = "";
+  list.forEach((p, i) => {
+    const card = document.createElement("div");
+    card.className = "polaroid";
+    card.style.transform = `rotate(${(Math.random() * 6 - 3).toFixed(1)}deg)`;
+    const ph = document.createElement("div");   // shown while the photo unlocks
+    ph.className = "ph"; ph.textContent = BADGES[i % BADGES.length];
+    card.appendChild(ph);
+    if (i % 2 === 0) card.insertAdjacentHTML("beforeend", `<span class="badge">${BADGES[(i * 3) % BADGES.length]}</span>`);
+    if (p.caption) {
+      const cap = document.createElement("div"); cap.className = "cap"; cap.textContent = p.caption;
+      card.appendChild(cap);
+    }
+    box.appendChild(card);
+    fetchDecrypt(p.file, key).then(bytes => {
+      const url = URL.createObjectURL(new Blob([bytes], { type: "image/jpeg" }));
+      const img = new Image(); img.src = url; img.alt = p.caption || "us";
+      ph.replaceWith(img);
+      card.addEventListener("click", () => {
+        const lb = document.getElementById("lightbox");
+        lb.querySelector("img").src = url; lb.style.display = "flex";
+      });
+    }).catch(() => {});
+  });
+}
+document.getElementById("lightbox").addEventListener("click", e => e.currentTarget.style.display = "none");
+(async () => {   // stay unlocked when reloading in the same tab
+  let pass = null; try { pass = sessionStorage.getItem("pass"); } catch (e) {}
+  if (!pass) return;
+  try {
+    const key = await deriveKey(pass);
+    openSite(JSON.parse(new TextDecoder().decode(await fetchDecrypt("data.bin", key))), key);
+  } catch (e) {}
+})();
+
+/* ---------- floating sparkles, hearts & flowers ---------- */
+const FLOAT = ["✨","💖","💕","🌸","🌷","💗","🌹","⭐","💞","🌼"];
+const layer = document.getElementById("floaters");
+function spawn() {
+  const f = document.createElement("span");
+  f.className = "floater";
+  f.textContent = FLOAT[Math.floor(Math.random() * FLOAT.length)];
+  f.style.left = Math.random() * 100 + "vw";
+  f.style.fontSize = (16 + Math.random() * 22) + "px";
+  const dur = 8 + Math.random() * 8;
+  f.style.animationDuration = dur + "s";
+  layer.appendChild(f);
+  setTimeout(() => f.remove(), dur * 1000);
+}
+for (let i = 0; i < 12; i++) setTimeout(spawn, i * 300);
+setInterval(spawn, 700);
+</script>
+</body>
+</html>
